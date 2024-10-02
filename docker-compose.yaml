@@ -1,7 +1,8 @@
-version: "3.9"
 services:
   postgres:
-    image: postgres:14-alpine
+    image: postgres:17-alpine
+    networks:
+      - bank-network
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=secret
@@ -11,8 +12,12 @@ services:
     volumes:
       - data-volume:/var/lib/postgresql/data
   redis:
+    networks:
+      - bank-network
     image: redis:7-alpine
   api:
+    networks:
+      - bank-network
     build:
       context: .
       dockerfile: Dockerfile
@@ -35,3 +40,5 @@ services:
     command: [ "/app/main" ]
 volumes:
   data-volume:
+networks:
+  bank-network:
